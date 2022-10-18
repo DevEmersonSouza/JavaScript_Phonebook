@@ -3,6 +3,15 @@
 // PUT - atualizar/alterar/
 // DELETE - apagar/deletar/destruir/remover/aniquilar
 
+window.onload = login();
+
+function login(){
+    let login = document.getElementById("myModal")
+    login.modal({
+        show: true
+      });  
+}
+
 async function addContato(){
     let dados = input_nova_tarefa.value.split(" ")
     let nome = dados[0]
