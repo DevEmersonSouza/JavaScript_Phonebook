@@ -73,3 +73,17 @@ async function deletar(identificador){
         console.log(res.statusText)
     }
 }
+
+function editar() {
+    teste.disabled = true;
+    editBtn.style.display="none"
+    concludeBtn.style.display="inline"
+    teste.style.color = "#000000"
+}
+
+function concluir(){
+    teste.disabled = false;
+    teste.style.color = "#ff0000"
+    editBtn.style.display="inline"
+    concludeBtn.style.display="none"
+}
