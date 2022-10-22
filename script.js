@@ -5,6 +5,7 @@
 $(window).on('load', function () {
     $('#myModal').modal('show');
 });
+
 async function addContato() {
     let dados = input_nova_tarefa.value.split(" ")
     let nome = dados[0]
@@ -26,18 +27,48 @@ async function addContato() {
     }
 }
 
-async function atualizar(identificador) {
-    let nomeNovo = prompt("nome?")
-    let idadeNovo = prompt("idade?")
 
-    let res = await fetch('https://633867b7937ea77bfdbf9c86.mockapi.io/pessoa3' + identificador, {
+
+async function atualizarContatos() {
+    let resposta = await fetch('https://633867b7937ea77bfdbf9c86.mockapi.io/pessoa3')
+    let body = await resposta.json()
+    contacts.innerHTML = `<div class="contacts">`
+    body.forEach(pessoa => {
+        contacts.innerHTML += `<div><input type="text" value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled">
+        <input type="text" value="${pessoa.idade}" id="telefone${pessoa.id}" disabled="disabled">
+        <button class="btn btn-outline-primary" onclick="editar(${pessoa.id})" id="editBtn">editar</button>
+        <button class="btn btn-outline-primary" onclick="concluir(${pessoa.id})" id="concludeBtn">concluir</button></div>`
+        
+    });
+    contacts.innerHTML += `</div>`
+}
+atualizarContatos();
+
+async function editar(id) {
+    let nomeNovo = document.getElementById("nome" + id)
+    let telefoneNovo = document.getElementById("telefone" + id)
+    nomeNovo.disabled = false;
+    telefoneNovo.disabled = false;
+    console.log("editando")
+    
+}
+
+async function concluir(id) {
+    
+    let nomeNovo = document.getElementById("nome" + id).value
+    let telefoneNovo = document.getElementById("telefone" + id).value
+    nomeNovo.disabled = true;
+    telefoneNovo.disabled = true;
+    console.log(nomeNovo)
+
+    let res = await fetch(`https://633867b7937ea77bfdbf9c86.mockapi.io/pessoa3/`+ id, {
         method: 'PUT',
         headers: {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
             nome: nomeNovo,
-            idade: idadeNovo
+            idade: telefoneNovo
         })
     });
     if (res.ok) {
@@ -46,49 +77,6 @@ async function atualizar(identificador) {
     } else {
         alert('Erro ao atualizar')
     }
-
-}
-
-
-async function atualizarContatos() {
-    let resposta = await fetch('https://633867b7937ea77bfdbf9c86.mockapi.io/pessoa3')
-    let body = await resposta.json()
-    contacts.innerHTML = "<div>"
-    body.forEach(pessoa => {
-        contacts.innerHTML += ` 
-        <input type="text" value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled">
-        <input type="text" value="${pessoa.idade}" id="telefone${pessoa.id}" disabled="disabled">
-        <button class="btn btn-outline-primary" onclick="editar()" id="editBtn">editar</button>
-        <button class="btn btn-outline-primary" onclick="concluir()" id="concludeBtn">concluir</button>`
-
-    });
-    contacts.innerHTML += "</div>"
-}
-atualizarContatos();
-
-async function editar() {
-    let resposta = await fetch('https://633867b7937ea77bfdbf9c86.mockapi.io/pessoa3')
-    let body = await resposta.json()
-    console.log(body)
-    body.forEach(pessoa => {
-        let nome = document.getElementById("nome" + pessoa.id)
-        let telefone = document.getElementById("telefone" + pessoa.id)
-        nome.disabled = false;
-        telefone.disabled = false;
-        console.log("editando")
-    });
-}
-
-async function concluir() {
-    let resposta = await fetch('https://633867b7937ea77bfdbf9c86.mockapi.io/pessoa3')
-    let body = await resposta.json()
-    body.forEach(pessoa => {
-        let nome = document.getElementById("nome" + pessoa.id)
-        let telefone = document.getElementById("telefone" + pessoa.id)
-        nome.disabled = true;
-        telefone.disabled = true;
-        console.log("concluindo")
-    });
 }
 
 async function deletar(identificador) {
@@ -101,6 +89,7 @@ async function deletar(identificador) {
         console.log(res.statusText)
     }
 }
+
 
 
 

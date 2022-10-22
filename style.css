@@ -1,9 +1,18 @@
-input{
-    all:inherit ;
+.contacts {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
 }
+
 
 .form-control {
     margin: 10px 0;
+}
+
+.card {
+    width: 600px;
+    display: flex;
 }
 
 .btn-default {
