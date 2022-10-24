@@ -30,12 +30,12 @@
             <form action="">
               <!-- Início do Formulário -->
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Digite seu login">
+                <input id="loginInput" type="text" class="form-control" placeholder="Digite seu login">
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" placeholder="Digite sua senha">
+                <input id="passwordInput" type="password" class="form-control" placeholder="Digite sua senha">
               </div>
-              <button class="btn btn-block btn-info">Login</button>
+              <button class="btn btn-block btn-info" onclick="login()">Login</button>
             </form>
           </div>
           <div class="modal-footer">
@@ -46,33 +46,68 @@
         </div>
       </div>
     </div>
-    <div class="col-xl-4 offset-xl-4">
+    <!-- Início do código da janela modal de Boas-vindas -->
+    <div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Olá humano!</h5>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Vejo que esse é o seu primeiro acesso!<br>
+            Como devo lhe chamar?
+          </div>
+          <div>
+            <input id="userWelcomeName" type="text" placeholder="Insira o seu primeiro nome">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="userExibitionName()">Pronto!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="container" class="col-xl-4 offset-xl-4 container">
       <div class="card card-body">
-        <h2>Lista telefonica</h2>
-        <h6>Contatos <input type="text" class="contador" id="numeros">
+        <div>
+          <input class="userNameEx" id="userNameEx" type="text">
+        </div>
+        <div><button id="btnLogout" class="btn btn-outline-primary" onclick="logOut()"><i
+          class="bi bi-box-arrow-left"></i></button></div>
+          <h2>Lista telefonica </h2>
+          <h6>Contatos <input type="text" class="contador" id="contador">
+
           <hr />
 
           <div class="col-9">
             <input id="input_novo_nome" placeholder="Nome" type="text" class="form-control" style="display: none;" />
-            <input id="input_novo_numero" placeholder="Numero" type="text" class="form-control"
-              style="display: none;" />
+            <input id="input_novo_numero" placeholder="(00)00000-0000" type="text" class="form-control"
+            style="display: none;" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="11">
             <button id="btnAddContato" class="btn btn-outline-primary" onclick="addContato()" style="display: none;">
               adicionar
             </button>
             <button id="btnCancelarContato" class="btn btn-outline-primary" onclick="cancelarFormContato()"
-              style="display: none;">
-              cancelar
-            </button>
+            style="display: none;">
+            cancelar
+          </button>
           </div>
-
+          
           <div class="col-3 d-grid">
             <button id="mostrarFormContato" class="btn btn-outline-primary" onclick="mostrarFormContato()">
               <i class="bi bi-person-plus-fill"></i>
             </button>
-            <button id="favoritos" class="btn btn-outline-primary">
-              <i class="bi bi-bookmark-star-fill"></i>
+            <button id="sortAZ" class="btn btn-outline-primary" onclick="trocarOrdenacaoAsc()">
+              <i class="bi bi-sort-alpha-down"></i>
             </button>
-
+            <button id="sortZA" class="btn btn-outline-primary" onclick="trocarOrdenacaoDesc()">
+              <i class="bi bi-sort-alpha-down"></i>
+            </button>
+            <button id="search" class="btn btn-outline-primary" onclick="search()">
+              <i class="bi bi-search"></i>
+            </button>
+            <input id="searchInput" placeholder="Sua Busca" type="text" class="form-control">
           </div>
 
           <hr />

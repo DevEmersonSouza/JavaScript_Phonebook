@@ -27,3 +27,12 @@
     all: unset;
 
 }
+
+.container{
+    -webkit-filter: blur(8px);
+    filter: blur(8px);
+}
+
+.userNameEx{
+    all: unset;
+}

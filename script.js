@@ -1,15 +1,91 @@
-// GET - pegar/trazer/listar
-// POST - subir/adicionar/enviar/criar
-// PUT - atualizar/alterar/
-// DELETE - apagar/deletar/destruir/remover/aniquilar
 let inputNovoNome = document.getElementById("input_novo_nome")
 let inputNovoNumero = document.getElementById("input_novo_numero")
 let btnAddContato = document.getElementById("btnAddContato")
 let btnMostrarFormContato = document.getElementById("mostrarFormContato")
 let btnCancelarContato = document.getElementById("btnCancelarContato")
+let ordenacao = localStorage.getItem("ordenacao")
+
+
+function userExibitionName() {
+    $('#welcomeModal').modal('hide');
+    $('#container').removeClass('container')
+    localStorage.setItem("userExibitonName", userWelcomeName.value)
+}
+
+userNameEx.value = "Olá," + localStorage.getItem("userExibitonName")
+
+function login() {
+    if (loginInput.value === "" || passwordInput.value === "") {
+        alert("favor insira credenciais válidas")
+        return
+    }
+    if (loginInput.value === "login" && passwordInput.value === "senha") {
+        localStorage.setItem("userLogin", loginInput.value)
+        localStorage.setItem("userPassword", passwordInput.value)
+        $('#myModal').modal('hide');
+        $('#welcomeModal').modal('show');
+        console.log("loguei")
+    }
+    else {
+        alert("login inválido")
+    }
+}
+function logOut() {
+    localStorage.removeItem("userLogin")
+    localStorage.removeItem("userPassword")
+    document.location.reload(true);
+}
+
 $(window).on('load', function () {
-    $('#myModal').modal('show');
+    let login = localStorage.getItem("userLogin");
+    let password = localStorage.getItem("userLogin");
+    
+    if (!login && !password) {
+        $('#myModal').modal({ backdrop: 'static', keyboard: false });
+        $('#myModal').modal('show');
+    }
+    else {
+        $('#container').removeClass('container')
+        $('#myModal').modal('hide');
+    }
 });
+
+let trocarOrdenacaoAsc = () => {
+    ordenacao = "asc"
+    localStorage.setItem("ordenacao", ordenacao)
+    atualizarContatos()
+};
+
+let trocarOrdenacaoDesc = () => {
+    ordenacao = "desc"
+    localStorage.setItem("ordenacao", ordenacao)
+    atualizarContatos()
+};
+
+function search() {
+    let inputSearch = document.getElementById("searchInput")
+    let container = document.getElementById("contacts")
+
+    inputSearch.addEventListener('keyup', () => {
+        let valor = inputSearch.value;
+        console.log(valor)
+        let inputs = container.getElementsByTagName('input')
+
+        for(let posicao in inputs) {
+            if(true === isNaN(posicao)) {
+                continue;
+            }
+            let conteudoDoInput = inputs[posicao].innerHTML;
+
+            if(true === conteudoDoInput.includes(valor)){
+                inputs[posicao].style.display = ""
+            }
+            else{
+                inputs[posicao].style.display = "none"
+            }
+        }
+    })
+}
 
 function mostrarFormContato() {
     inputNovoNome.style.display = "inline"
@@ -24,6 +100,8 @@ function cancelarFormContato() {
     btnAddContato.style.display = "none"
     btnCancelarContato.style.display = "none"
     btnMostrarFormContato.style.display = "inline"
+    input_novo_nome.value = ""
+    input_novo_numero.value = ""
 }
 async function addContato() {
     let nome = input_novo_nome.value
@@ -33,7 +111,7 @@ async function addContato() {
         alert("por favor inserir as informacoes")
         return
     }
-    let novoContato = await fetch('https://633867b7937ea77bfdbf9c86.mockapi.io/pessoa3', {
+    let novoContato = await fetch('https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica', {
         method: "POST",
         headers: {
             'content-type': 'application/json'
@@ -57,12 +135,20 @@ async function addContato() {
 
 
 async function atualizarContatos() {
-    let resposta = await fetch('https://633867b7937ea77bfdbf9c86.mockapi.io/pessoa3')
+    let resposta = await fetch('https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica')
     let body = await resposta.json()
-    let contador = document.getElementById("numeros")
-    contador.value = "("  + body.length + ")"
+    let contador = document.getElementById("contador")
+    contador.value = "(" + body.length + ")"
+
     contacts.innerHTML = `<div class="contacts">`
-    body.forEach(pessoa => {
+    let listaSorted = body.sort((a,b) => a.nome < b.nome ? -1 : a.nome > b.nome ? 1 : 0);
+    
+    if (ordenacao === "desc") {
+        listaSorted = body.sort((b,a) => a.nome < b.nome ? -1 : a.nome > b.nome ? 1 : 0);
+        
+    }
+
+    listaSorted.forEach(pessoa => {
         contacts.innerHTML += `<div><input type="text" value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled">
         <input type="text" value="${pessoa.idade}" id="telefone${pessoa.id}" disabled="disabled">
         <button class="btn btn-outline-primary" onclick="editar(${pessoa.id})" id="editBtn${pessoa.id}"><i class="bi bi-pencil-square"></i></button>
@@ -101,7 +187,6 @@ async function editar(id) {
 }
 
 async function concluir(id) {
-
     let nomeNovo = document.getElementById("nome" + id).value
     let telefoneNovo = document.getElementById("telefone" + id).value
     let editBtn = document.getElementById("editBtn" + id)
@@ -112,7 +197,7 @@ async function concluir(id) {
     telefoneNovo.disabled = true;
     console.log(nomeNovo)
 
-    let adicionarNumero = await fetch(`https://633867b7937ea77bfdbf9c86.mockapi.io/pessoa3/` + id, {
+    let adicionarNumero = await fetch(`https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica/` + id, {
         method: 'PUT',
         headers: {
             'content-type': 'application/json'
@@ -131,7 +216,7 @@ async function concluir(id) {
 }
 
 async function deletar(id) {
-    let deletar = await fetch(`https://633867b7937ea77bfdbf9c86.mockapi.io/pessoa3/` + id, {
+    let deletar = await fetch(`https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica/` + id, {
         method: 'DELETE',
     });
     if (deletar.ok) {
