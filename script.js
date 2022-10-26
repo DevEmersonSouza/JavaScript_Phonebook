@@ -5,42 +5,9 @@ let btnMostrarFormContato = document.getElementById("mostrarFormContato")
 let btnCancelarContato = document.getElementById("btnCancelarContato")
 let ordenacao = localStorage.getItem("ordenacao")
 
-
-function userExibitionName() {
-    $('#welcomeModal').modal('hide');
-    $('#container').removeClass('container')
-    localStorage.setItem("userExibitonName", userWelcomeName.value)
-}
-
-userNameEx.value = "Olá," + localStorage.getItem("userExibitonName")
-
-function login() {
-    if (loginInput.value === "" || passwordInput.value === "") {
-        alert("favor insira credenciais válidas")
-        return
-    }
-    if (loginInput.value === "login" && passwordInput.value === "senha") {
-        localStorage.setItem("userLogin", loginInput.value)
-        localStorage.setItem("userPassword", passwordInput.value)
-        $('#welcomeModal').modal({ backdrop: 'static', keyboard: false });
-        $('#welcomeModal').modal('show');
-        $('#myModal').modal('hide');
-        console.log("loguei")
-    }
-    else {
-        alert("login inválido")
-    }
-}
-function logOut() {
-    localStorage.removeItem("userLogin")
-    localStorage.removeItem("userPassword")
-    document.location.reload(true);
-}
-
 $(window).on('load', function () {
     let login = localStorage.getItem("userLogin");
     let password = localStorage.getItem("userLogin");
-    
     if (!login && !password) {
         $('#myModal').modal({ backdrop: 'static', keyboard: false });
         $('#myModal').modal('show');
@@ -50,6 +17,25 @@ $(window).on('load', function () {
         $('#myModal').modal('hide');
     }
 });
+
+function login() {
+    localStorage.setItem("userLogin", loginInput.value)
+    localStorage.setItem("userPassword", passwordInput.value)
+    if (loginInput.value !== "login" && passwordInput.value !== "senha") {
+        alert("login inválido")
+        if (loginInput.value === "" || passwordInput.value === "") {
+            alert("favor insira credenciais válidas")
+        }
+    }
+    else {
+        $('#myModal').modal('hide');
+        console.log("loguei")
+    }
+}
+function logOut() {
+    localStorage.clear()
+    document.location.reload(true);
+}
 
 let trocarOrdenacaoAsc = () => {
     ordenacao = "asc"
@@ -118,18 +104,18 @@ async function atualizarContatos() {
     contador.value = "(" + body.length + ")"
 
     contacts.innerHTML = `<div class="contacts">`
-    let listaSorted = body.sort((a,b) => a.nome < b.nome ? -1 : a.nome > b.nome ? 1 : 0);
-    
+    let listaSorted = body.sort((a, b) => a.nome < b.nome ? -1 : a.nome > b.nome ? 1 : 0);
+
     if (ordenacao === "desc") {
-        listaSorted = body.sort((b,a) => a.nome < b.nome ? -1 : a.nome > b.nome ? 1 : 0);
-        
+        listaSorted = body.sort((b, a) => a.nome < b.nome ? -1 : a.nome > b.nome ? 1 : 0);
+
     }
 
     listaSorted.forEach(pessoa => {
-        contacts.innerHTML += `<div id="pessoas"><input type="text" value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled">
+        contacts.innerHTML += `<div><input type="text" value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled">
         <input type="text" value="${pessoa.idade}" id="telefone${pessoa.id}" disabled="disabled">
         <button class="btn btn-outline-primary" onclick="editar(${pessoa.id})" id="editBtn${pessoa.id}"><i class="bi bi-pencil-square"></i></button>
-        <button class="btn btn-outline-primary" onclick="concluir(${pessoa.id})" id="concludeBtn${pessoa.id}" style="display: none;"><i class="bi bi-check-circle-fill"></i></button>
+        <button class="btn btn-outline-primary" onclick="concluirEdicao(${pessoa.id})" id="concludeBtn${pessoa.id}" style="display: none;"><i class="bi bi-check-circle-fill"></i></button>
         <button class="btn btn-outline-primary" onclick="deletar(${pessoa.id})" id="deleteBtn"><i class="bi bi-x-circle-fill"></i></button>
         <button id="favoritos${pessoa.id}" class="btn btn-outline-primary favorito"  onclick="favoritos(${pessoa.id})"><i class="bi bi-bookmark-star-fill"></i></button>
         <button id="removerfavoritos${pessoa.id}" class="btn btn-outline-primary removerfavorito"  onclick="favoritos(${pessoa.id})" style="display: none;"><i class="bi bi-bookmark-x-fill"></i></button></div>`
@@ -143,7 +129,7 @@ atualizarContatos();
 function favoritos(id) {
     favoriteButton = document.getElementById("favoritos" + id);
     removerFavoriteButton = document.getElementById("removerfavoritos" + id);
-    contato = document.getElementById("nome" + id)
+    contato = document.getElementById("nome" + id).value
     removerFavoriteButton.style.display = "inline"
     favoriteButton.style.display = "none"
 
@@ -163,7 +149,7 @@ async function editar(id) {
 
 }
 
-async function concluir(id) {
+async function concluirEdicao(id) {
     let nomeNovo = document.getElementById("nome" + id).value
     let telefoneNovo = document.getElementById("telefone" + id).value
     let editBtn = document.getElementById("editBtn" + id)
@@ -208,23 +194,23 @@ function search() {
     let inputSearch = document.getElementById("searchInput");
     let container = document.getElementById("contacts")
     searchInput.style.display = "inline"
-    
+
     inputSearch.addEventListener('keyup', () => {
-    
+
         let valor = inputSearch.value.toLowerCase();
         let inputs = container.getElementsByTagName('div')
-        if (valor.length === 1){
+        if (valor.length === 1) {
             return
         }
-        for(let posicao in inputs) {
-            if(true === isNaN(posicao)) {
+        for (let posicao in inputs) {
+            if (true === isNaN(posicao)) {
                 continue;
             }
             let conteudoDoInput = inputs[posicao].innerHTML.toLowerCase();
-            if(true === conteudoDoInput.includes(valor)){
+            if (true === conteudoDoInput.includes(valor)) {
                 inputs[posicao].style.display = ""
             }
-            else{
+            else {
                 inputs[posicao].style.display = "none"
             }
         }
