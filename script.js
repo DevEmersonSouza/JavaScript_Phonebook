@@ -68,12 +68,44 @@ function cancelarFormContato() {
     input_novo_nome.value = ""
     input_novo_numero.value = ""
 }
+
+function mascaraTelefone(event) {
+    let tecla = event.key;
+    let telefone = event.target.value.replace(/\D+/g, "");
+
+    if (/^[0-9]$/i.test(tecla)) {
+        telefone = telefone + tecla;
+        let tamanho = telefone.length;
+
+        if (tamanho >= 12) {
+            return false;
+        }
+
+        if (tamanho > 10) {
+            telefone = telefone.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1) $2-$3");
+        } else if (tamanho > 5) {
+            telefone = telefone.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+        } else if (tamanho > 2) {
+            telefone = telefone.replace(/^(\d\d)(\d{0,5})/, "($1) $2");
+        } else {
+            telefone = telefone.replace(/^(\d*)/, "($1");
+        }
+
+        event.target.value = telefone;
+    }
+
+    if (!["Backspace", "Delete"].includes(tecla)) {
+        return false;
+    }
+}
+
 async function addContato() {
     let nome = input_novo_nome.value
     let numero = input_novo_numero.value
 
-    if (nome === "" || numero === "") {
-        alert("por favor inserir as informacoes")
+
+    if (numero.length < 15) {
+        alert("por favor, inserir informações válidas")
         return
     }
     let novoContato = await fetch('https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica', {
@@ -96,32 +128,30 @@ async function addContato() {
     cancelarFormContato()
 }
 
-
-
-
 async function atualizarContatos() {
     let resposta = await fetch('https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica')
     let body = await resposta.json()
     let contador = document.getElementById("contador")
     contador.value = "(" + body.length + ")"
 
-        let listaSorted = body.sort((a, b) => a.nome.toLowerCase() < b.nome.toLowerCase() ? -1 : a.nome.toLowerCase() > b.nome.toLowerCase() ? 1 : 0);
-    
+    let listaSorted = body.sort((a, b) => a.nome.toLowerCase() < b.nome.toLowerCase() ? -1 : a.nome.toLowerCase() > b.nome.toLowerCase() ? 1 : 0);
+
     if (ordenacao === "desc") {
         listaSorted = body.sort((b, a) => a.nome.toLowerCase() < b.nome.toLowerCase() ? -1 : a.nome.toLowerCase() > b.nome.toLowerCase() ? 1 : 0);
-        
+
     }
-    
     contacts.innerHTML = `<div class="contacts">`
     listaSorted.forEach(pessoa => {
-        contacts.innerHTML += `<div id="pessoa${pessoa.id}"><input type="text" value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled">
-        <input type="text" value="${pessoa.idade}" id="telefone${pessoa.id}" disabled="disabled"></div>
-        <div id="botoes">
-        <button class="btn btn-outline-primary" onclick="editar(${pessoa.id})" id="editBtn${pessoa.id}"><i class="bi bi-pencil-square"></i></button>
-        <button class="btn btn-outline-primary" onclick="concluirEdicao(${pessoa.id})" id="concludeBtn${pessoa.id}" style="display: none;"><i class="bi bi-check-circle-fill"></i></button>
-        <button class="btn btn-outline-primary" onclick="deletar(${pessoa.id})" id="deleteBtn"><i class="bi bi-x-circle-fill"></i></button>
-        <button id="favoritos${pessoa.id}" class="btn btn-outline-primary favorito"  onclick="favoritos(${pessoa.id})"><i class="bi bi-bookmark-star"></i></i></button>
-        <button id="removerFavoritos${pessoa.id}" class="btn btn-outline-primary removerfavorito"  onclick="removeFavoritos(${pessoa.id})" style="display: none;"><i class="bi bi-bookmark-star-fill"></i></i></button></div>`
+        contacts.innerHTML += `<div id="teste" class= "pessoas">
+            <div id="pessoa${pessoa.id}">
+                <input type="text" class="contact-input form-control"value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled"><input type="text" value="${pessoa.idade}" class="contact-input form-control" id="telefone${pessoa.id}" disabled="disabled" onkeydown="return mascaraTelefone(event)"></div>
+                    <div id="botoes${pessoa.id}">
+                        <button class="btn btn-outline-primary" onclick="editar(${pessoa.id})" id="editBtn${pessoa.id}"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-outline-primary" onclick="concluirEdicao(${pessoa.id})" id="concludeBtn${pessoa.id}" style="display: none;"><i class="bi bi-check-circle-fill"></i></button>
+                        <button class="btn btn-outline-primary" onclick="deletar(${pessoa.id})" id="deleteBtn"><i class="bi bi-x-circle-fill"></i></button>
+                        <button id="favoritos${pessoa.id}" class="btn btn-outline-primary favorito" onclick="favoritos(${pessoa.id})"><i class="bi bi-bookmark-star"></i></i></button>
+                        <button id="removerFavoritos${pessoa.id}" class="btn btn-outline-primary removerfavorito" onclick="removeFavoritos(${pessoa.id})" style="display: none;"><i class="bi bi-bookmark-star-fill"></i></i></button>
+                    </div></div>`
     });
     contacts.innerHTML += `</div>`
 }
@@ -131,12 +161,12 @@ function favoritos(id) {
     let favoriteButton = document.getElementById("favoritos" + id);
     let removerFavoriteButton = document.getElementById("removerFavoritos" + id);
     let contato = document.getElementById("nome" + id).value
+    let contatoFavorito = document.getElementById("pessoa" + id)
     removerFavoriteButton.style.display = ""
     favoriteButton.style.display = "none"
-    localStorage.setItem("contatofavorito"+id, contato)
-    
-    if (localStorage.getItem("contatofavorito"+id, contato)){
-        contatoFavorito = document.getElementById("pessoa" +id)
+    localStorage.setItem("contatofavorito" + id, contato)
+
+    if (localStorage.getItem("contatofavorito" + id) === contato) {
         favoriteContacts.innerHTML += `<div id="cttfav${id}">` + contatoFavorito.innerHTML + `<div>`
     }
 }
@@ -144,12 +174,11 @@ function removeFavoritos(id) {
     let favoriteButton = document.getElementById("favoritos" + id);
     let removerFavoriteButton = document.getElementById("removerFavoritos" + id);
     let contato = document.getElementById("nome" + id).value
-    localStorage.removeItem("contatofavorito"+id, contato)
+    localStorage.removeItem("contatofavorito" + id, contato)
     removerFavoriteButton.style.display = "none"
-    favoriteButton.style.display ="inline"
-    
-    if (contato){
-        contatoFavorito = document.getElementById("cttfav" +id)
+    favoriteButton.style.display = "inline"
+    if (contato) {
+        contatoFavorito = document.getElementById("cttfav" + id)
         contatoFavorito.remove()
         console.log("passei")
     }
@@ -177,8 +206,6 @@ async function concluirEdicao(id) {
     concludeBtn.style.display = "none"
     nomeNovo.disabled = true;
     telefoneNovo.disabled = true;
-    console.log(nomeNovo)
-
     let adicionarNumero = await fetch(`https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica/` + id, {
         method: 'PUT',
         headers: {
@@ -189,6 +216,12 @@ async function concluirEdicao(id) {
             idade: telefoneNovo
         })
     });
+    if (telefoneNovo.length < 15) {
+        alert('Apenas números com 9 digitos')
+        editBtn.style.display = "none"
+        concludeBtn.style.display = "inline"
+        return
+    }
     if (adicionarNumero.ok) {
         alert('Atualizou')
         atualizarContatos()
@@ -209,10 +242,25 @@ async function deletar(id) {
     }
 }
 
+function Mudarestado(el) {
+    let display = document.getElementById(el).style.display;
+    if(display == "none")
+        document.getElementById(el).style.display = 'block';
+    else
+        document.getElementById(el).style.display = 'none';
+}
+
 function search() {
+    Mudarestado("listaFav")
     let inputSearch = document.getElementById("searchInput");
     let container = document.getElementById("contacts")
-    searchInput.style.display = "inline"
+        if(inputSearch.style.display == "none"){
+            inputSearch.style.display = 'block'
+        }
+        else{
+            inputSearch.style.display = 'none'
+            atualizarContatos();
+        }
 
     inputSearch.addEventListener('keyup', () => {
 

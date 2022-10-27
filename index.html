@@ -9,7 +9,8 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="#" data-toggle="modal" data-target="#myModal">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -25,7 +26,7 @@
           </div>
           <div class="modal-body">
             <!-- Corpo do modal -->
-            <h6 class="modal-title">Por Favor digite suas credenciais para prosseguir:</h6>
+            <h6 class="modal-title-body">Por Favor digite suas credenciais para prosseguir:</h6>
             <form action="">
               <!-- Início do Formulário -->
               <div class="form-group">
@@ -34,7 +35,9 @@
               <div class="form-group">
                 <input id="passwordInput" type="password" class="form-control" placeholder="Digite sua senha">
               </div>
-              <button class="btn btn-block btn-info" onclick="login()">Login</button>
+              <div>
+                <button class="btn btn-block btn-info loginBtn" onclick="login()">Entrar</button>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -47,58 +50,64 @@
     </div>
     <div id="container" class="col-xl-4 offset-xl-4 container">
       <div class="card card-body">
-        <div>
-          <input class="userNameEx" id="userNameEx" type="text">
+        <div class="header-row">
+          <div>
+            <h2>Lista telefonica </h2>
+            <h6>Contatos <input type="text" class="contador" id="contador">
+          </div>
+          <div>
+            <button id="btnLogout" class="btn btn-danger logOutBtn" onclick="logOut()"><i
+                class="bi bi-box-arrow-left"></i></button>
+          </div>
         </div>
-        <div><button id="btnLogout" class="btn btn-outline-primary" onclick="logOut()"><i
-          class="bi bi-box-arrow-left"></i></button></div>
-          <h2>Lista telefonica </h2>
-          <h6>Contatos <input type="text" class="contador" id="contador">
-
-          <hr />
-
-          <div class="col-9">
-            <input id="input_novo_nome" placeholder="Nome" type="text" class="form-control" style="display: none;" />
-            <input id="input_novo_numero" placeholder="(00)00000-0000" type="text" class="form-control"
-            style="display: none;" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="11">
-            <button id="btnAddContato" class="btn btn-outline-primary" onclick="addContato()" style="display: none;">
-              adicionar
-            </button>
-            <button id="btnCancelarContato" class="btn btn-outline-primary" onclick="cancelarFormContato()"
+        <hr />
+        <div>
+          <input id="input_novo_nome" class="input_novo_nome form-control" placeholder="Nome" class="form-control" type="text" style="display: none;" />
+          <input id="input_novo_numero" class="input_novo_numero  form-control" placeholder="(00)00000-0000" type="tel" class="form-control"
+            style="display: none;" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="11"
+            onkeydown="return mascaraTelefone(event)">
+        </div>
+        <div class="functions-row">
+          <button id="btnAddContato" class="btn btn-outline-primary" onclick="addContato()" style="display: none;">
+            adicionar
+          </button>
+          <button id="btnCancelarContato" class="btn btn-outline-primary" onclick="cancelarFormContato()"
             style="display: none;">
             cancelar
           </button>
-          </div>
-          
+          <button id="mostrarFormContato" class="btn btn-outline-primary" onclick="mostrarFormContato()">
+            <i class="bi bi-person-plus-fill"></i>
+          </button>
+          <button id="sortAZ" class="btn btn-outline-primary" onclick="trocarOrdenacaoAsc()">
+            <i class="bi bi-sort-alpha-down"></i>
+          </button>
+          <button id="sortZA" class="btn btn-outline-primary" onclick="trocarOrdenacaoDesc()">
+            <i class="bi bi-sort-alpha-down-alt"></i>
+          </button>
+          <button id="search" class="btn btn-outline-primary" onclick="search()">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+        <input id="searchInput" class="searchInput" placeholder="Sua Busca" type="text" class="form-control"
+          style="display:none;">
+        <div class="col-3 d-grid">
+        </div>
+        <hr  />
+        <div id="listaFav">
           <div class="col-3 d-grid">
-            <button id="mostrarFormContato" class="btn btn-outline-primary" onclick="mostrarFormContato()">
-              <i class="bi bi-person-plus-fill"></i>
-            </button>
-            <button id="sortAZ" class="btn btn-outline-primary" onclick="trocarOrdenacaoAsc()">
-              <i class="bi bi-sort-alpha-down"></i>
-            </button>
-            <button id="sortZA" class="btn btn-outline-primary" onclick="trocarOrdenacaoDesc()">
-              <i class="bi bi-sort-alpha-down-alt"></i>
-            </button>
-            <button id="search" class="btn btn-outline-primary" onclick="search()">
-              <i class="bi bi-search"></i>
-            </button>
-            <input id="searchInput" placeholder="Sua Busca" type="text" class="form-control" style="display:none;">
+            Lista de Favoritos
           </div>
-
-          <hr />
-          
-          <div class="col-3 d-grid">
-            <div>Lista de Favoritos</div>
-          </div>
+          <hr>
           <div id="favoriteContacts">
           </div>
-          <div class="col-3 d-grid">
-            <div>Nome</div>
-            <div>Telefone</div>
-          </div>
-          <div id="contacts">
-          </div>
+          <hr>
+        </div>
+        <div class="contacts-row">
+          <div>Nome</div>
+          <div>Telefone</div>
+        </div>
+        <div id="contacts" >
+        </div>
       </div>
     </div>
   </section>
@@ -106,7 +115,9 @@
   <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script><!-- Chama a biblioteca JQuery -->
   <!-- Chama o arquivo Bootstrap JavaScript -->
   <script src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>

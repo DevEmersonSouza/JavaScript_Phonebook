@@ -1,46 +1,82 @@
-.contacts {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@600&display=swap');
+*{
+    font-family: 'Maven Pro', sans-serif;
 
 }
-
-
-.form-control {
-    margin: 10px 0;
-}
-
-.card {
-    width: 600px;
-    display: flex;
-}
-
-.btn-default {
-    background: rgb(212, 114, 240);
-    background: linear-gradient(90deg, rgba(212, 114, 240, 1) 0%, rgba(6, 113, 172, 1) 100%);
-    color: white;
-    font-weight: 700;
-    border: 1px solid black;
-}
-
-.contador{
-    all: unset;
-
-}
-
 .container{
     -webkit-filter: blur(8px);
     filter: blur(8px);
 }
 
-.userNameEx{
+.btn-default {
+    background: linear-gradient(90deg, rgba(212, 114, 240, 1) 0%, rgba(6, 113, 172, 1) 100%);
+    color: white;
+    font-weight: 700;
+    border: none;
+}
+.form-control{
+    margin: 10px 0 ;
+}
+
+.modal-title-body{
+    margin: 0 0 15px 0;
+}
+
+.loginBtn{
+    color: white;
+    background: linear-gradient(90deg, rgba(212, 114, 240, 1) 0%, rgba(6, 113, 172, 1) 100%);
+    margin: 10px 0;
+    min-width: 466px;
+    border: none;
+}
+.logOutBtn{
+    color: white;
+}
+.contador{
+    all: unset;
+
+}
+
+.header-row{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.input_novo_nome{
+    margin: 0 0 10px 0;
+
+}
+.input_novo_numero{
+    margin: 0 0 10px 0;
+
+}
+
+.searchInput{
+    padding: 5px;
+    margin: 10px 0;
+    width: auto;
+}
+
+.listaFav{
+    display: none;
+}
+
+.functions-row{
+    display: flex;
+    justify-content: right;
+}
+
+.contacts-row{
+    display: flex;
+}
+
+.pessoas{
+    display: flex;
+}
+
+.contact-input{
     all: unset;
 }
 
-.removerfavorito{
-
-}
-
-.favorito{
-    color: black;
-}
