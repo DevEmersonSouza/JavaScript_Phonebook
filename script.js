@@ -1,9 +1,9 @@
-let inputNovoNome = document.getElementById("input_novo_nome")
-let inputNovoNumero = document.getElementById("input_novo_numero")
-let btnAddContato = document.getElementById("btnAddContato")
-let btnMostrarFormContato = document.getElementById("mostrarFormContato")
-let btnCancelarContato = document.getElementById("btnCancelarContato")
-let ordenacao = localStorage.getItem("ordenacao")
+let inputNovoNome = document.getElementById("input_novo_nome");
+let inputNovoNumero = document.getElementById("input_novo_numero");
+let btnAddContato = document.getElementById("btnAddContato");
+let btnMostrarFormContato = document.getElementById("mostrarFormContato");
+let btnCancelarContato = document.getElementById("btnCancelarContato");
+let ordenacao = localStorage.getItem("ordenacao");
 
 $(window).on('load', function () {
     let login = localStorage.getItem("userLogin");
@@ -39,13 +39,13 @@ function logOut() {
     document.location.reload(true);
 }
 
-let trocarOrdenacaoAsc = () => {
+let trocarOrdenacaoAsc = () => {;
     ordenacao = "asc"
     localStorage.setItem("ordenacao", ordenacao)
     atualizarContatos()
 };
 
-let trocarOrdenacaoDesc = () => {
+let trocarOrdenacaoDesc = () => {;
     ordenacao = "desc"
     localStorage.setItem("ordenacao", ordenacao)
     atualizarContatos()
@@ -70,12 +70,12 @@ function cancelarFormContato() {
 }
 
 function mascaraTelefone(event) {
-    let tecla = event.key;
-    let telefone = event.target.value.replace(/\D+/g, "");
+    let tecla = event.key;;
+    let telefone = event.target.value.replace(/\D+/g, "");;
 
     if (/^[0-9]$/i.test(tecla)) {
         telefone = telefone + tecla;
-        let tamanho = telefone.length;
+        let tamanho = telefone.length;;
 
         if (tamanho >= 12) {
             return false;
@@ -100,8 +100,8 @@ function mascaraTelefone(event) {
 }
 
 async function addContato() {
-    let nome = input_novo_nome.value
-    let numero = input_novo_numero.value
+    let nome = input_novo_nome.value;
+    let numero = input_novo_numero.value;
 
 
     if (numero.length < 15) {
@@ -129,12 +129,12 @@ async function addContato() {
 }
 
 async function atualizarContatos() {
-    let resposta = await fetch('https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica')
-    let body = await resposta.json()
-    let contador = document.getElementById("contador")
+    let resposta = await fetch('https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica');
+    let body = await resposta.json();
+    let contador = document.getElementById("contador");
     contador.value = "(" + body.length + ")"
 
-    let listaSorted = body.sort((a, b) => a.nome.toLowerCase() < b.nome.toLowerCase() ? -1 : a.nome.toLowerCase() > b.nome.toLowerCase() ? 1 : 0);
+    let listaSorted = body.sort((a, b) => a.nome.toLowerCase() < b.nome.toLowerCase() ? -1 : a.nome.toLowerCase() > b.nome.toLowerCase() ? 1 : 0);;
 
     if (ordenacao === "desc") {
         listaSorted = body.sort((b, a) => a.nome.toLowerCase() < b.nome.toLowerCase() ? -1 : a.nome.toLowerCase() > b.nome.toLowerCase() ? 1 : 0);
@@ -142,9 +142,9 @@ async function atualizarContatos() {
     }
     contacts.innerHTML = `<div class="contacts ">`
     listaSorted.forEach(pessoa => {
-        contacts.innerHTML += `<div id="teste" class= "pessoas">
+        contacts.innerHTML += `<div class="pessoas">
             <div id="pessoa${pessoa.id}">
-                <input type="text" class="contact-input" value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled"><input type="text" value="${pessoa.idade}" class="contact-input " id="telefone${pessoa.id}" disabled="disabled" onkeydown="return mascaraTelefone(event)"></div>
+                <input type="text" class="contact-input" value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled" maxlength="21"><input type="text" value="${pessoa.idade}" class="contact-input " id="telefone${pessoa.id}" disabled="disabled" onkeydown="return mascaraTelefone(event)"></div>
                     <div id="botoes${pessoa.id}" class = "buttons-row">
                     <button class="btn btn-outline-primary" onclick="editar(${pessoa.id})" id="editBtn${pessoa.id}"><i class="bi bi-pencil-square"></i></button>
                     <button class="btn btn-outline-primary" onclick="concluirEdicao(${pessoa.id})" id="concludeBtn${pessoa.id}" style="display: none;"><i class="bi bi-check-circle-fill"></i></button>
@@ -156,26 +156,26 @@ async function atualizarContatos() {
     contacts.innerHTML += `</div>`
 }
 atualizarContatos();
-let arrayTeste
+let arrayTeste;
 
 if (localStorage.getItem("contatofavorito")) {
     arrayTeste = JSON.parse(localStorage.getItem("contatofavorito"))
-    
+
 } else {
     arrayTeste = []
 }
 
 
 function favoritos(id) {
-    let favoriteButton = document.getElementById("favoritos" + id);
-    let removerFavoriteButton = document.getElementById("removerFavoritos" + id);
-    let nome = document.getElementById("nome" + id).value
-    let telefone = document.getElementById("telefone" + id).value
-    
+    let favoriteButton = document.getElementById("favoritos" + id);;
+    let removerFavoriteButton = document.getElementById("removerFavoritos" + id);;
+    let nome = document.getElementById("nome" + id).value;
+    let telefone = document.getElementById("telefone" + id).value;
+
     removerFavoriteButton.style.display = ""
     favoriteButton.style.display = "none"
-    arrayTeste.push({nome: nome, telefone: telefone, id: id})
-    localStorage.setItem("contatofavorito",JSON.stringify(arrayTeste))
+    arrayTeste.push({ nome: nome, telefone: telefone, id: id })
+    localStorage.setItem("contatofavorito", JSON.stringify(arrayTeste))
     manterFavorito()
 }
 
@@ -183,29 +183,28 @@ manterFavorito()
 
 function manterFavorito(id) {
     favoriteContacts.innerHTML = ""
-    
     arrayTeste.forEach((element) => {
-        
-        favoriteContacts.innerHTML += `<div class="favorites-row"><div class="favorite-name">` + element.nome  + `</div>`+`<div class="favorite-number">` + element.telefone  + `</div></div>`+ `<hr>`
-        
+
+        favoriteContacts.innerHTML += `<div class="favorites-row"><div class="favorite-name">` + element.nome + `</div>` + `<div class="favorite-number">` + element.telefone + `</div></div>` + `<hr>`
+
     });
 }
 
-function removeFavoritos(index){
-        let favoriteButton = document.getElementById("favoritos" + index);
-    let removerFavoriteButton = document.getElementById("removerFavoritos" + index);
+function removeFavoritos(index) {
+    let favoriteButton = document.getElementById("favoritos" + index);;
+    let removerFavoriteButton = document.getElementById("removerFavoritos" + index);;
     removerFavoriteButton.style.display = "none"
     favoriteButton.style.display = "inline"
-  arrayTeste = arrayTeste.filter(contato => contato.id !== index)
-  localStorage.setItem("contatofavorito",JSON.stringify(arrayTeste))
-  manterFavorito()
+    arrayTeste = arrayTeste.filter(contato => contato.id !== index)
+    localStorage.setItem("contatofavorito", JSON.stringify(arrayTeste))
+    manterFavorito()
 }
 
 async function editar(id) {
-    let nomeNovo = document.getElementById("nome" + id)
-    let telefoneNovo = document.getElementById("telefone" + id)
-    let editBtn = document.getElementById("editBtn" + id)
-    let concludeBtn = document.getElementById("concludeBtn" + id)
+    let nomeNovo = document.getElementById("nome" + id);
+    let telefoneNovo = document.getElementById("telefone" + id);
+    let editBtn = document.getElementById("editBtn" + id);
+    let concludeBtn = document.getElementById("concludeBtn" + id);
     nomeNovo.disabled = false;
     telefoneNovo.disabled = false;
     console.log("editando")
@@ -217,10 +216,10 @@ async function editar(id) {
 }
 
 async function concluirEdicao(id) {
-    let nomeNovo = document.getElementById("nome" + id).value
-    let telefoneNovo = document.getElementById("telefone" + id).value
-    let editBtn = document.getElementById("editBtn" + id)
-    let concludeBtn = document.getElementById("concludeBtn" + id)
+    let nomeNovo = document.getElementById("nome" + id).value;
+    let telefoneNovo = document.getElementById("telefone" + id).value;
+    let editBtn = document.getElementById("editBtn" + id);
+    let concludeBtn = document.getElementById("concludeBtn" + id);
     editBtn.style.display = "inline"
     concludeBtn.style.display = "none"
     nomeNovo.disabled = true;
@@ -263,8 +262,8 @@ async function deletar(id) {
 }
 
 function Mudarestado(el) {
-    let display = document.getElementById(el).style.display;
-    if(display == "none")
+    let display = document.getElementById(el).style.display;;
+    if (display == "none")
         document.getElementById(el).style.display = 'block';
     else
         document.getElementById(el).style.display = 'none';
@@ -272,28 +271,28 @@ function Mudarestado(el) {
 
 function search() {
     Mudarestado("listaFav")
-    let inputSearch = document.getElementById("searchInput");
-    let container = document.getElementById("contacts")
-        if(inputSearch.style.display == "none"){
-            inputSearch.style.display = 'block'
-        }
-        else{
-            inputSearch.style.display = 'none'
-            atualizarContatos();
-        }
+    let inputSearch = document.getElementById("searchInput");;
+    let container = document.getElementById("contacts");
+    if (inputSearch.style.display == "none") {
+        inputSearch.style.display = 'block'
+    }
+    else {
+        inputSearch.style.display = 'none'
+        atualizarContatos();
+    }
 
     inputSearch.addEventListener('keyup', () => {
 
-        let valor = inputSearch.value.toLowerCase();
-        let inputs = container.getElementsByTagName('div')
+        let valor = inputSearch.value.toLowerCase();;
+        let inputs = container.getElementsByTagName('div');
         if (valor.length === 2) {
             return
         }
-        for (let posicao in inputs) {
+        for (let posicao in inputs) {;
             if (true === isNaN(posicao)) {
                 continue;
             }
-            let conteudoDoInput = inputs[posicao].innerHTML.toLowerCase();
+            let conteudoDoInput = inputs[posicao].innerHTML.toLowerCase();;
             if (true === conteudoDoInput.includes(valor)) {
                 inputs[posicao].style.display = ""
             }
@@ -303,7 +302,3 @@ function search() {
         }
     })
 }
-
-
-
-
