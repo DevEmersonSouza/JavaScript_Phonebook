@@ -146,11 +146,11 @@ async function atualizarContatos() {
             <div id="pessoa${pessoa.id}">
                 <input type="text" class="contact-input form-control"value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled"><input type="text" value="${pessoa.idade}" class="contact-input form-control" id="telefone${pessoa.id}" disabled="disabled" onkeydown="return mascaraTelefone(event)"></div>
                     <div id="botoes${pessoa.id}">
-                        <button class="btn btn-outline-primary" onclick="editar(${pessoa.id})" id="editBtn${pessoa.id}"><i class="bi bi-pencil-square"></i></button>
-                        <button class="btn btn-outline-primary" onclick="concluirEdicao(${pessoa.id})" id="concludeBtn${pessoa.id}" style="display: none;"><i class="bi bi-check-circle-fill"></i></button>
-                        <button class="btn btn-outline-primary" onclick="deletar(${pessoa.id})" id="deleteBtn"><i class="bi bi-x-circle-fill"></i></button>
-                        <button id="favoritos${pessoa.id}" class="btn btn-outline-primary favorito" onclick="favoritos(${pessoa.id})"><i class="bi bi-bookmark-star"></i></i></button>
-                        <button id="removerFavoritos${pessoa.id}" class="btn btn-outline-primary removerfavorito" onclick="removeFavoritos(${pessoa.id})" style="display: none;"><i class="bi bi-bookmark-star-fill"></i></i></button>
+                    <button class="btn btn-outline-primary" onclick="editar(${pessoa.id})" id="editBtn${pessoa.id}"><i class="bi bi-pencil-square"></i></button>
+                    <button class="btn btn-outline-primary" onclick="concluirEdicao(${pessoa.id})" id="concludeBtn${pessoa.id}" style="display: none;"><i class="bi bi-check-circle-fill"></i></button>
+                    <button id="favoritos${pessoa.id}" class="btn btn-outline-primary favorito" onclick="favoritos(${pessoa.id})"><i class="bi bi-bookmark-star"></i></i></button>
+                    <button id="removerFavoritos${pessoa.id}" class="btn btn-outline-primary removerfavorito" onclick="removeFavoritos(${pessoa.id})" style="display: none;"><i class="bi bi-bookmark-star-fill"></i></i></button>
+                    <button class="btn btn-outline-primary" onclick="deletar(${pessoa.id})" id="deleteBtn"><i class="bi bi-x-circle-fill"></i></button>
                     </div></div>`
     });
     contacts.innerHTML += `</div>`
@@ -160,29 +160,32 @@ atualizarContatos();
 function favoritos(id) {
     let favoriteButton = document.getElementById("favoritos" + id);
     let removerFavoriteButton = document.getElementById("removerFavoritos" + id);
-    let contato = document.getElementById("nome" + id).value
-    let contatoFavorito = document.getElementById("pessoa" + id)
+    let nome = document.getElementById("nome" + id).value
+    let telefone = document.getElementById("telefone" + id).value
+    
     removerFavoriteButton.style.display = ""
     favoriteButton.style.display = "none"
-    localStorage.setItem("contatofavorito" + id, contato)
+    localStorage.setItem("contatofavorito" + id, [nome, telefone])
 
-    if (localStorage.getItem("contatofavorito" + id) === contato) {
-        favoriteContacts.innerHTML += `<div id="cttfav${id}">` + contatoFavorito.innerHTML + `<div>`
-    }
 }
-function removeFavoritos(id) {
-    let favoriteButton = document.getElementById("favoritos" + id);
-    let removerFavoriteButton = document.getElementById("removerFavoritos" + id);
-    let contato = document.getElementById("nome" + id).value
-    localStorage.removeItem("contatofavorito" + id, contato)
-    removerFavoriteButton.style.display = "none"
-    favoriteButton.style.display = "inline"
-    if (contato) {
-        contatoFavorito = document.getElementById("cttfav" + id)
-        contatoFavorito.remove()
-        console.log("passei")
-    }
+
+manterFavorito()
+function manterFavorito() {
+    favoriteContacts.innerHTML += localStorage.getItem("contatofavorito2")
 }
+// function removeFavoritos(id) {
+//     let favoriteButton = document.getElementById("favoritos" + id);
+//     let removerFavoriteButton = document.getElementById("removerFavoritos" + id);
+//     let contato = document.getElementById("nome" + id).value
+//     localStorage.removeItem("contatofavorito" + id, contato)
+//     removerFavoriteButton.style.display = "none"
+//     favoriteButton.style.display = "inline"
+//     if (contato) {
+//         contatoFavorito = document.getElementById("cttfav" + id)
+//         contatoFavorito.remove()
+//         console.log("passei")
+//     }
+// }
 
 async function editar(id) {
     let nomeNovo = document.getElementById("nome" + id)
@@ -266,7 +269,7 @@ function search() {
 
         let valor = inputSearch.value.toLowerCase();
         let inputs = container.getElementsByTagName('div')
-        if (valor.length === 1) {
+        if (valor.length === 2) {
             return
         }
         for (let posicao in inputs) {
