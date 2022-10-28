@@ -140,12 +140,12 @@ async function atualizarContatos() {
         listaSorted = body.sort((b, a) => a.nome.toLowerCase() < b.nome.toLowerCase() ? -1 : a.nome.toLowerCase() > b.nome.toLowerCase() ? 1 : 0);
 
     }
-    contacts.innerHTML = `<div class="contacts">`
+    contacts.innerHTML = `<div class="contacts ">`
     listaSorted.forEach(pessoa => {
         contacts.innerHTML += `<div id="teste" class= "pessoas">
             <div id="pessoa${pessoa.id}">
-                <input type="text" class="contact-input form-control"value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled"><input type="text" value="${pessoa.idade}" class="contact-input form-control" id="telefone${pessoa.id}" disabled="disabled" onkeydown="return mascaraTelefone(event)"></div>
-                    <div id="botoes${pessoa.id}">
+                <input type="text" class="contact-input" value="${pessoa.nome}" id="nome${pessoa.id}" disabled="disabled"><input type="text" value="${pessoa.idade}" class="contact-input " id="telefone${pessoa.id}" disabled="disabled" onkeydown="return mascaraTelefone(event)"></div>
+                    <div id="botoes${pessoa.id}" class = "buttons-row">
                     <button class="btn btn-outline-primary" onclick="editar(${pessoa.id})" id="editBtn${pessoa.id}"><i class="bi bi-pencil-square"></i></button>
                     <button class="btn btn-outline-primary" onclick="concluirEdicao(${pessoa.id})" id="concludeBtn${pessoa.id}" style="display: none;"><i class="bi bi-check-circle-fill"></i></button>
                     <button id="favoritos${pessoa.id}" class="btn btn-outline-primary favorito" onclick="favoritos(${pessoa.id})"><i class="bi bi-bookmark-star"></i></i></button>
@@ -156,6 +156,15 @@ async function atualizarContatos() {
     contacts.innerHTML += `</div>`
 }
 atualizarContatos();
+let arrayTeste
+
+if (localStorage.getItem("contatofavorito")) {
+    arrayTeste = JSON.parse(localStorage.getItem("contatofavorito"))
+    
+} else {
+    arrayTeste = []
+}
+
 
 function favoritos(id) {
     let favoriteButton = document.getElementById("favoritos" + id);
@@ -165,38 +174,45 @@ function favoritos(id) {
     
     removerFavoriteButton.style.display = ""
     favoriteButton.style.display = "none"
-    localStorage.setItem("contatofavorito" + id, [nome, telefone])
-
+    arrayTeste.push({nome: nome, telefone: telefone, id: id})
+    localStorage.setItem("contatofavorito",JSON.stringify(arrayTeste))
+    manterFavorito()
 }
 
 manterFavorito()
-function manterFavorito() {
-    favoriteContacts.innerHTML += localStorage.getItem("contatofavorito2")
+
+function manterFavorito(id) {
+    favoriteContacts.innerHTML = ""
+    
+    arrayTeste.forEach((element) => {
+        
+        favoriteContacts.innerHTML += `<div class="favorites-row"><div class="favorite-name">` + element.nome  + `</div>`+`<div class="favorite-number">` + element.telefone  + `</div></div>`+ `<hr>`
+        
+    });
 }
-// function removeFavoritos(id) {
-//     let favoriteButton = document.getElementById("favoritos" + id);
-//     let removerFavoriteButton = document.getElementById("removerFavoritos" + id);
-//     let contato = document.getElementById("nome" + id).value
-//     localStorage.removeItem("contatofavorito" + id, contato)
-//     removerFavoriteButton.style.display = "none"
-//     favoriteButton.style.display = "inline"
-//     if (contato) {
-//         contatoFavorito = document.getElementById("cttfav" + id)
-//         contatoFavorito.remove()
-//         console.log("passei")
-//     }
-// }
+
+function removeFavoritos(index){
+        let favoriteButton = document.getElementById("favoritos" + index);
+    let removerFavoriteButton = document.getElementById("removerFavoritos" + index);
+    removerFavoriteButton.style.display = "none"
+    favoriteButton.style.display = "inline"
+  arrayTeste = arrayTeste.filter(contato => contato.id !== index)
+  localStorage.setItem("contatofavorito",JSON.stringify(arrayTeste))
+  manterFavorito()
+}
 
 async function editar(id) {
     let nomeNovo = document.getElementById("nome" + id)
     let telefoneNovo = document.getElementById("telefone" + id)
     let editBtn = document.getElementById("editBtn" + id)
     let concludeBtn = document.getElementById("concludeBtn" + id)
-    editBtn.style.display = "none"
-    concludeBtn.style.display = "inline"
     nomeNovo.disabled = false;
     telefoneNovo.disabled = false;
     console.log("editando")
+    editBtn.style.display = "none"
+    concludeBtn.style.display = "inline"
+    $("#nome" + id).addClass('editing-inputs')
+    $("#telefone" + id).addClass('editing-inputs')
 
 }
 
@@ -238,6 +254,7 @@ async function deletar(id) {
         method: 'DELETE',
     });
     if (deletar.ok) {
+        alert('Contato Deletado')
         console.log("deletei")
         atualizarContatos();
     } else {
