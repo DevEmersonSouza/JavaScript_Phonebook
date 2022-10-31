@@ -243,9 +243,11 @@ async function concluirEdicao(id) {
         concludeBtn.style.display = "inline"
         return
     }
+    if (localStorage.getItem("contatofavorito").includes(id)){
+        favoritos(id)
+    }
     if (adicionarNumero.ok) {
         alert('Atualizou')
-        favoritos(id)
         atualizarContatos()
     } else {
         alert('Erro ao atualizar')
