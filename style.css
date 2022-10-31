@@ -87,6 +87,7 @@
 
 .pessoas{
     display: flex;
+    align-items: center;
     justify-content: space-between;
 }
 
@@ -97,7 +98,6 @@
 }
 
 .buttons-row{
-    margin: 5px 10px 0 0 ;
 
 }
 .editing-inputs{
@@ -110,6 +110,8 @@ hr{
 }
 .favorites-row{
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: azure;
 }
 .favoriteContacts{
@@ -122,8 +124,19 @@ hr{
 .favorite-name{
     padding: 0 5px ;
     width: 206px;
+    margin: 5px 10px 0 0 ;
 }
 .favorite-number{
     width: 206px;
     padding: 0 5px;
+    margin: 5px 10px 0 0 ;
+}
+
+.deleteFavButton{
+    color: white;
+    
+}
+
+.nameNumber{
+    display: flex;
 }

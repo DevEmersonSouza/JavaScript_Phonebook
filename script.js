@@ -149,9 +149,9 @@ async function atualizarContatos() {
                     <button class="btn btn-outline-primary" onclick="editar(${pessoa.id})" id="editBtn${pessoa.id}"><i class="bi bi-pencil-square"></i></button>
                     <button class="btn btn-outline-primary" onclick="concluirEdicao(${pessoa.id})" id="concludeBtn${pessoa.id}" style="display: none;"><i class="bi bi-check-circle-fill"></i></button>
                     <button id="favoritos${pessoa.id}" class="btn btn-outline-primary favorito" onclick="favoritos(${pessoa.id})"><i class="bi bi-bookmark-star"></i></i></button>
-                    <button id="removerFavoritos${pessoa.id}" class="btn btn-outline-primary removerfavorito" onclick="removeFavoritos(${pessoa.id})" style="display: none;"><i class="bi bi-bookmark-star-fill"></i></i></button>
                     <button class="btn btn-outline-primary" onclick="deletar(${pessoa.id})" id="deleteBtn"><i class="bi bi-x-circle-fill"></i></button>
                     </div></div>`
+                    // <button id="removerFavoritos${pessoa.id}" class="btn btn-outline-primary removerfavorito" onclick="removeFavoritos(${pessoa.id})" style="display: none;"><i class="bi bi-bookmark-star-fill"></i></i></button>
     });
     contacts.innerHTML += `</div>`
 }
@@ -168,12 +168,9 @@ if (localStorage.getItem("contatofavorito")) {
 
 function favoritos(id) {
     let favoriteButton = document.getElementById("favoritos" + id);;
-    let removerFavoriteButton = document.getElementById("removerFavoritos" + id);;
     let nome = document.getElementById("nome" + id).value;
     let telefone = document.getElementById("telefone" + id).value;
-
-    removerFavoriteButton.style.display = ""
-    favoriteButton.style.display = "none"
+    favoriteButton.disabled = "disabled"
     arrayTeste.push({ nome: nome, telefone: telefone, id: id })
     localStorage.setItem("contatofavorito", JSON.stringify(arrayTeste))
     manterFavorito()
@@ -184,17 +181,22 @@ manterFavorito()
 function manterFavorito(id) {
     favoriteContacts.innerHTML = ""
     arrayTeste.forEach((element) => {
-
-        favoriteContacts.innerHTML += `<div class="favorites-row"><div class="favorite-name">` + element.nome + `</div>` + `<div class="favorite-number">` + element.telefone + `</div></div>` + `<hr>`
-
+        
+        favoriteContacts.innerHTML += `<div class="favorites-row"><div class="nameNumber"><div class="favorite-name">` + element.nome + `</div>` + `<div class="favorite-number">` + element.telefone + `</div></div><button class="btn btn-danger btn-info" onclick="removeFavoritos(${element.id})" deleteFavButton"><i class="bi bi-trash"></i></button></div>` + `<hr>`
+        
     });
 }
 
 function removeFavoritos(index) {
-    let favoriteButton = document.getElementById("favoritos" + index);;
-    let removerFavoriteButton = document.getElementById("removerFavoritos" + index);;
-    removerFavoriteButton.style.display = "none"
-    favoriteButton.style.display = "inline"
+    let favoriteButton = document.getElementById("favoritos" + index);
+    if (favoriteButton === null)
+    {
+        arrayTeste = arrayTeste.filter(contato => contato.id !== index)
+        localStorage.setItem("contatofavorito", JSON.stringify(arrayTeste))
+        manterFavorito()
+        return
+    }
+    favoriteButton.disabled = ""
     arrayTeste = arrayTeste.filter(contato => contato.id !== index)
     localStorage.setItem("contatofavorito", JSON.stringify(arrayTeste))
     manterFavorito()
@@ -224,6 +226,7 @@ async function concluirEdicao(id) {
     concludeBtn.style.display = "none"
     nomeNovo.disabled = true;
     telefoneNovo.disabled = true;
+    removeFavoritos(id)
     let adicionarNumero = await fetch(`https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica/` + id, {
         method: 'PUT',
         headers: {
@@ -242,6 +245,7 @@ async function concluirEdicao(id) {
     }
     if (adicionarNumero.ok) {
         alert('Atualizou')
+        favoritos(id)
         atualizarContatos()
     } else {
         alert('Erro ao atualizar')
