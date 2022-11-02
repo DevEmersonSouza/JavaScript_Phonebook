@@ -5,6 +5,7 @@ let btnMostrarFormContato = document.getElementById("mostrarFormContato");
 let btnCancelarContato = document.getElementById("btnCancelarContato");
 let ordenacao = localStorage.getItem("ordenacao");
 
+
 $(window).on('load', function () {
     let login = localStorage.getItem("userLogin");
     let password = localStorage.getItem("userLogin");
@@ -167,7 +168,7 @@ if (localStorage.getItem("contatofavorito")) {
 
 
 function favoritos(id) {
-    let favoriteButton = document.getElementById("favoritos" + id);;
+    let favoriteButton = document.getElementById("favoritos" + id);
     let nome = document.getElementById("nome" + id).value;
     let telefone = document.getElementById("telefone" + id).value;
     favoriteButton.disabled = "disabled"
@@ -226,7 +227,6 @@ async function concluirEdicao(id) {
     concludeBtn.style.display = "none"
     nomeNovo.disabled = true;
     telefoneNovo.disabled = true;
-    removeFavoritos(id)
     let adicionarNumero = await fetch(`https://634df4bbb8ce95a1dd7c265e.mockapi.io/ListaTelefonica/` + id, {
         method: 'PUT',
         headers: {
@@ -243,10 +243,8 @@ async function concluirEdicao(id) {
         concludeBtn.style.display = "inline"
         return
     }
-    if (localStorage.getItem("contatofavorito").includes(id)){
-        favoritos(id)
-    }
     if (adicionarNumero.ok) {
+        manterFavorito(id)
         alert('Atualizou')
         atualizarContatos()
     } else {

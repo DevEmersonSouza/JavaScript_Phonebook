@@ -4,6 +4,12 @@
     font-family: 'Maven Pro', sans-serif;
 
 }
+
+.card{
+    width: 620px;
+
+}
+
 .container{
     -webkit-filter: blur(8px);
     filter: blur(8px);
@@ -87,7 +93,6 @@
 
 .pessoas{
     display: flex;
-    align-items: center;
     justify-content: space-between;
 }
 
@@ -111,13 +116,11 @@ hr{
 .favorites-row{
     display: flex;
     justify-content: space-between;
-    align-items: center;
     background-color: azure;
 }
 .favoriteContacts{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     margin: 10px 0;
 }
 
